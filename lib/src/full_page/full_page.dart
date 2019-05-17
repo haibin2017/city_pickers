@@ -21,9 +21,10 @@ class FullPage extends StatefulWidget {
   final ShowType showType;
   final Map<String, dynamic> provincesData;
   final Map<String, dynamic> citiesData;
+  final ValueChanged<Result> changed;
 
   FullPage(
-      {this.locationCode, this.showType, this.provincesData, this.citiesData});
+      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed});
 
   @override
   _FullPageState createState() => _FullPageState();
@@ -179,6 +180,61 @@ class _FullPageState extends State<FullPage> {
     return result;
   }
 
+
+  Result _buildResultSelected(int flag) {
+    Result result = Result();
+    ShowType showType = widget.showType;
+    try {
+      if (flag == 1) {
+        if (showType.contain(ShowType.p)) {
+          result.provinceId = targetProvince.code.toString();
+          result.provinceName = targetProvince.name;
+        }
+      } else if (flag == 2) {
+        if (showType.contain(ShowType.p)) {
+          result.provinceId = targetProvince.code.toString();
+          result.provinceName = targetProvince.name;
+        }
+        if (showType.contain(ShowType.c)) {
+          result.provinceId = targetProvince.code.toString();
+          result.provinceName = targetProvince.name;
+          result.cityId = targetCity != null ? targetCity.code.toString() : null;
+          result.cityName = targetCity != null ? targetCity.name : null;
+        }
+      } else if (flag == 3) {
+        if (showType.contain(ShowType.p)) {
+          result.provinceId = targetProvince.code.toString();
+          result.provinceName = targetProvince.name;
+        }
+        if (showType.contain(ShowType.c)) {
+          result.provinceId = targetProvince.code.toString();
+          result.provinceName = targetProvince.name;
+          result.cityId = targetCity != null ? targetCity.code.toString() : null;
+          result.cityName = targetCity != null ? targetCity.name : null;
+        }
+        if (showType.contain(ShowType.a)) {
+          result.provinceId = targetProvince.code.toString();
+          result.provinceName = targetProvince.name;
+          result.cityId = targetCity != null ? targetCity.code.toString() : null;
+          result.cityName = targetCity != null ? targetCity.name : null;
+          result.areaId = targetArea != null ? targetArea.code.toString() : null;
+          result.areaName = targetArea != null ? targetArea.name : null;
+        }
+      }
+    } catch (e) {
+      // 此处兼容, 部分城市下无地区信息的情况
+    }
+
+    // 台湾异常数据. 需要过滤
+    if (result.provinceId == "710000") {
+      result.cityId = null;
+      result.cityName = null;
+      result.areaId = null;
+      result.areaName = null;
+    }
+    return result;
+  }
+
   Point _getTargetChildFirst(Point target) {
     if (target == null) {
       return null;
@@ -197,18 +253,27 @@ class _FullPageState extends State<FullPage> {
     this.setState(() {
       targetProvince = cityTree.initTree(province.code);
     });
+    if (widget.changed != null) {
+      widget.changed(_buildResultSelected(1));
+    }
   }
 
   _onAreaSelect(Point area) {
     this.setState(() {
       targetArea = area;
     });
+    if (widget.changed != null) {
+      widget.changed(_buildResultSelected(3));
+    }
   }
 
   _onCitySelect(Point city) {
     this.setState(() {
       targetCity = city;
     });
+    if (widget.changed != null) {
+      widget.changed(_buildResultSelected(2));
+    }
   }
 
   int _getSelectedId() {

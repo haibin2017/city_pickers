@@ -73,6 +73,7 @@ class CityPickers {
     String locationCode = '110000',
     Map<String, dynamic> citiesData,
     Map<String, dynamic> provincesData,
+    ValueChanged<Result> changed
   }) {
     return Navigator.push(
         context,
@@ -86,6 +87,9 @@ class CityPickers {
                 locationCode: locationCode,
                 citiesData: citiesData ?? meta.citiesData,
                 provincesData: provincesData ?? meta.provincesData,
+                changed: (value) {
+                  changed(value);
+                },
               )),
           transitionsBuilder:
               (_, Animation<double> animation, __, Widget child) =>

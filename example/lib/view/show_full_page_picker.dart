@@ -169,7 +169,11 @@ class _ShowFullPageCityPickerState extends State<ShowFullPageCityPicker> {
                 locationCode: resultAttr != null ? resultAttr.areaId ?? resultAttr.cityId ?? resultAttr.provinceId : null,
                 showType: showTypeAttr.value,
                 citiesData: customerMeta ? citiesData : null,
-                provincesData: customerMeta ? provincesData : null
+                provincesData: customerMeta ? provincesData : null,
+                changed: (value) {
+                  print('选择的结果');
+                  print(value);
+                }
               );
               if (tempResult == null) {
                 return ;
