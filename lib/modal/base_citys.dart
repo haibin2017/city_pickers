@@ -157,7 +157,7 @@ class Provinces {
     provList.sort((Point a, Point b) {
       return a.letter.compareTo(b.letter);
     });
-    if (this.showCountry) {
+    if (this.showCountry == true) {
       provList.insert(0, Point(
           code: 1,
           letter: 'a',
