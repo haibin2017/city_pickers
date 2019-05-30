@@ -14,6 +14,7 @@ import 'package:city_pickers/modal/point.dart';
 import 'package:city_pickers/modal/result.dart';
 import 'package:city_pickers/src/show_types.dart';
 import 'package:city_pickers/src/util.dart';
+import 'package:city_pickers/src/utils/adaption_utils.dart';
 import 'package:flutter/material.dart';
 
 class FullPage extends StatefulWidget {
@@ -22,9 +23,10 @@ class FullPage extends StatefulWidget {
   final Map<String, dynamic> provincesData;
   final Map<String, dynamic> citiesData;
   final ValueChanged<Result> changed;
+  final bool showConfirm;
 
   FullPage(
-      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed});
+      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm});
 
   @override
   _FullPageState createState() => _FullPageState();
@@ -73,6 +75,8 @@ class _FullPageState extends State<FullPage> {
 
   /// the target area user selected
   Point targetArea;
+
+  int _areaFlag = 1;
 
   @override
   void initState() {
@@ -252,6 +256,7 @@ class _FullPageState extends State<FullPage> {
   _onProvinceSelect(Point province) {
     this.setState(() {
       targetProvince = cityTree.initTree(province.code);
+      _areaFlag = 1;
     });
     if (widget.changed != null) {
       widget.changed(_buildResultSelected(1));
@@ -261,6 +266,7 @@ class _FullPageState extends State<FullPage> {
   _onAreaSelect(Point area) {
     this.setState(() {
       targetArea = area;
+      _areaFlag = 3;
     });
     if (widget.changed != null) {
       widget.changed(_buildResultSelected(3));
@@ -270,6 +276,7 @@ class _FullPageState extends State<FullPage> {
   _onCitySelect(Point city) {
     this.setState(() {
       targetCity = city;
+      _areaFlag = 2;
     });
     if (widget.changed != null) {
       widget.changed(_buildResultSelected(2));
@@ -351,6 +358,7 @@ class _FullPageState extends State<FullPage> {
   }
 
   Widget _buildHead() {
+
     String title = '请选择城市';
     switch (pageStatus) {
       case Status.Province:
@@ -369,13 +377,36 @@ class _FullPageState extends State<FullPage> {
 
   @override
   Widget build(BuildContext context) {
+    var appBar = null;
+    if (widget.showConfirm == true) {
+      appBar = AppBar(
+        title: _buildHead(),
+        actions: <Widget>[
+          GestureDetector(
+              child: Container(
+                padding: EdgeInsets.only(right: Adapt.px(40)),
+                alignment: Alignment.center,
+                child: Text('确定'),
+              ),
+              onTap: () {
+                if (widget.changed != null) {
+                  widget.changed(_buildResultSelected(_areaFlag));
+                }
+                Navigator.of(context).pop();
+              }
+          )
+        ],
+      );
+    } else {
+      appBar = AppBar(
+        title: _buildHead()
+      );
+    }
     return WillPopScope(
       onWillPop: back,
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: _buildHead(),
-          ),
+          appBar: appBar,
           body: SafeArea(
               bottom: true,
               child: ListWidget(
