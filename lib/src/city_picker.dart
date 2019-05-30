@@ -73,6 +73,7 @@ class CityPickers {
     String locationCode = '110000',
     Map<String, dynamic> citiesData,
     Map<String, dynamic> provincesData,
+    bool showConfirm,
     ValueChanged<Result> changed
   }) {
     return Navigator.push(
@@ -87,6 +88,7 @@ class CityPickers {
                 locationCode: locationCode,
                 citiesData: citiesData ?? meta.citiesData,
                 provincesData: provincesData ?? meta.provincesData,
+                showConfirm: showConfirm,
                 changed: (value) {
                   changed(value);
                 },
