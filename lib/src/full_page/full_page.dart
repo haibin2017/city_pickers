@@ -253,14 +253,19 @@ class _FullPageState extends State<FullPage> {
     Navigator.of(context).pop(_buildResult());
   }
 
-  _onProvinceSelect(Point province) {
-    this.setState(() {
-      targetProvince = cityTree.initTree(province.code);
-      _areaFlag = 1;
-    });
+  int _onProvinceSelect(Point province) {
     if (widget.changed != null) {
       widget.changed(_buildResultSelected(1));
     }
+    setState(() {
+      targetProvince = cityTree.initTree(province.code);
+      _areaFlag = 1;
+    });
+    if (province.code.toString() == '0') {
+      // 选择了全国
+      return 1;
+    }
+    return 0;
   }
 
   _onAreaSelect(Point area) {
@@ -309,7 +314,9 @@ class _FullPageState extends State<FullPage> {
     List<Point> nextItemList;
     switch (pageStatus) {
       case Status.Province:
-        _onProvinceSelect(targetPoint);
+        if (_onProvinceSelect(targetPoint) == 1) {
+          return;
+        }
         nextStatus = Status.City;
         nextItemList = targetProvince.child;
         if (!widget.showType.contain(ShowType.c)) {
