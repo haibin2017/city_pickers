@@ -139,8 +139,9 @@ class CityTree {
 /// Province Class
 class Provinces {
   Map<String, String> metaInfo;
+  bool showCountry = false;
 
-  Provinces({this.metaInfo = provincesData});
+  Provinces({this.metaInfo = provincesData, this.showCountry});
 
   // 获取省份数据
   get provinces {
@@ -156,6 +157,12 @@ class Provinces {
     provList.sort((Point a, Point b) {
       return a.letter.compareTo(b.letter);
     });
+    if (this.showCountry) {
+      provList.insert(0, Point(
+          code: 1,
+          letter: 'a',
+          name: '全国'));
+    }
     return provList;
   }
 }

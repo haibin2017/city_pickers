@@ -74,7 +74,8 @@ class CityPickers {
     Map<String, dynamic> citiesData,
     Map<String, dynamic> provincesData,
     bool showConfirm,
-    ValueChanged<Result> changed
+    ValueChanged<Result> changed,
+    bool showCountry,
   }) {
     return Navigator.push(
         context,
@@ -89,6 +90,7 @@ class CityPickers {
                 citiesData: citiesData ?? meta.citiesData,
                 provincesData: provincesData ?? meta.provincesData,
                 showConfirm: showConfirm,
+                showCountry: showCountry,
                 changed: (value) {
                   changed(value);
                 },
