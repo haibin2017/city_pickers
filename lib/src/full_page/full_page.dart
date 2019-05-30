@@ -24,9 +24,10 @@ class FullPage extends StatefulWidget {
   final Map<String, dynamic> citiesData;
   final ValueChanged<Result> changed;
   final bool showConfirm;
+  final bool showCountry;
 
   FullPage(
-      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm});
+      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm, this.showCountry});
 
   @override
   _FullPageState createState() => _FullPageState();
@@ -83,7 +84,7 @@ class _FullPageState extends State<FullPage> {
     super.initState();
 
     scrollController = new ScrollController();
-    provinces = new Provinces(metaInfo: widget.provincesData).provinces;
+    provinces = new Provinces(metaInfo: widget.provincesData, showCountry: widget.showCountry == true ? widget.showCountry : false).provinces;
     cityTree = new CityTree(
         metaInfo: widget.citiesData, provincesInfo: widget.provincesData);
     itemList = provinces;
@@ -258,13 +259,16 @@ class _FullPageState extends State<FullPage> {
       widget.changed(_buildResultSelected(1));
     }
     setState(() {
-      targetProvince = cityTree.initTree(province.code);
       _areaFlag = 1;
     });
-    if (province.code.toString() == '0') {
+    print(province.code);
+    if (province.code.toString() == '1') {
       // 选择了全国
       return 1;
     }
+    setState(() {
+      targetProvince = cityTree.initTree(province.code);
+    });
     return 0;
   }
 
@@ -315,6 +319,8 @@ class _FullPageState extends State<FullPage> {
     switch (pageStatus) {
       case Status.Province:
         if (_onProvinceSelect(targetPoint) == 1) {
+          targetProvince = targetPoint;
+          nextStatus = Status.Over;
           return;
         }
         nextStatus = Status.City;
@@ -458,6 +464,8 @@ class ListWidget extends StatelessWidget {
               // item 内容内边距
               enabled: true,
               onTap: () {
+                print('选择了');
+                print(index);
                 onSelect(itemList[index]);
               },
               // item onTap 点击事件

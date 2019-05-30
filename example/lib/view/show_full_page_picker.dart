@@ -171,6 +171,7 @@ class _ShowFullPageCityPickerState extends State<ShowFullPageCityPicker> {
                 citiesData: customerMeta ? citiesData : null,
                 provincesData: customerMeta ? provincesData : null,
                 showConfirm: true,
+                showCountry: true,
                 changed: (value) {
                   print('选择的结果');
                   print(value);
