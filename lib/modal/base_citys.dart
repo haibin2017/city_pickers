@@ -53,7 +53,7 @@ class CityTree {
     }
 
     String name = this._provincesData[provinceId.toString()];
-    String letter = PinyinHelper.getFirstWordPinyin(name).substring(0, 1);
+    String letter = provinceId == 1 ? 'a' : PinyinHelper.getFirstWordPinyin(name).substring(0, 1);
     var root =
         new Point(code: provinceId, letter: letter, child: [], name: name);
     tree = _buildTree(root, metaInfo[provinceId.toString()], metaInfo);
@@ -151,18 +151,12 @@ class Provinces {
       String name = metaInfo[keys[i]];
       provList.add(Point(
           code: int.parse(keys[i]),
-          letter: PinyinHelper.getFirstWordPinyin(name).substring(0, 1),
+          letter: keys[i] == '1' ? 'a' : PinyinHelper.getFirstWordPinyin(name).substring(0, 1),
           name: name));
     }
     provList.sort((Point a, Point b) {
       return a.letter.compareTo(b.letter);
     });
-    if (this.showCountry == true) {
-      provList.insert(0, Point(
-          code: 1,
-          letter: 'a',
-          name: '全国'));
-    }
     return provList;
   }
 }

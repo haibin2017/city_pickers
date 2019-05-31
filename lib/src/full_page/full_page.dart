@@ -82,11 +82,18 @@ class _FullPageState extends State<FullPage> {
   @override
   void initState() {
     super.initState();
-
+    Map<String, String> provincesData = {};
+    if (widget.showCountry == true) {
+      provincesData['1'] = '全国';
+    }
+    widget.provincesData.forEach((key, value) {
+      provincesData[key] = value;
+    });
     scrollController = new ScrollController();
-    provinces = new Provinces(metaInfo: widget.provincesData, showCountry: widget.showCountry == true ? widget.showCountry : false).provinces;
+
+    provinces = new Provinces(metaInfo: provincesData, showCountry: widget.showCountry == true ? widget.showCountry : false).provinces;
     cityTree = new CityTree(
-        metaInfo: widget.citiesData, provincesInfo: widget.provincesData);
+        metaInfo: widget.citiesData, provincesInfo: provincesData);
     itemList = provinces;
     pageStatus = Status.Province;
     try {
@@ -119,7 +126,11 @@ class _FullPageState extends State<FullPage> {
             "The Argument locationCode must be valid like: '100000' but get '$locationCode' "));
         return;
       }
-
+      print('结果： ${widget.showCountry} code: ${locationCode}');
+      if (widget.showCountry == true && locationCode == '1') {
+        targetProvince = cityTree.initTreeByCode(1);
+        return;
+      }
       targetProvince = cityTree.initTreeByCode(_locationCode);
       if (targetProvince.isNull) {
         targetProvince = cityTree.initTreeByCode(provinces.first.code);
@@ -299,10 +310,10 @@ class _FullPageState extends State<FullPage> {
         selectId = targetProvince.code;
         break;
       case Status.City:
-        selectId = targetCity.code;
+        selectId = targetCity != null ? targetCity.code : 1;
         break;
       case Status.Area:
-        selectId = targetArea.code;
+        selectId = targetArea != null ? targetArea.code : 1;
         break;
       case Status.Over:
         break;

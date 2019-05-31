@@ -166,7 +166,7 @@ class _ShowFullPageCityPickerState extends State<ShowFullPageCityPicker> {
               Result tempResult = await CityPickers.showFullPageCityPicker(
                 context: context,
                 theme: themeAttr !=null ? themeAttr.value : null,
-                locationCode: resultAttr != null ? resultAttr.areaId ?? resultAttr.cityId ?? resultAttr.provinceId : null,
+                locationCode: '1', //resultAttr != null ? resultAttr.areaId ?? resultAttr.cityId ?? resultAttr.provinceId : null,
                 showType: showTypeAttr.value,
                 citiesData: customerMeta ? citiesData : null,
                 provincesData: customerMeta ? provincesData : null,
