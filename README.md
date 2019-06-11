@@ -83,6 +83,9 @@ showCitiesSelector 是在版本:0.1.16中刚封装出的功能. 可能存在不�
 |theme|ThemeData|Theme.of(context)| 主题, 可以自定义|
 |locationCode|String|110000| 初始化地址信息, 可以是省, 市, 区的地区码|
 |showType|ShowType|ShowType.pca| 三级联动, 显示类型|
+|showCountry|Boolean| 是否显示全国选项，默认 false|
+|showConfirm|Boolean| 是否显示确定按钮，默认 false|
+|changed|Function| 点击省或市或县区，或者确定按钮时回调此函数，有一个参数和选择完区后的值一致
 |citiesData|Map|[城市数据](https://github.com/hanxu317317/city_pickers/blob/master/lib/meta/province.dart)|选择器的城市与区的数据源|
 |provincesData|Map|[省份数据](https://github.com/hanxu317317/city_pickers/blob/master/lib/meta/province.dart)|选择器的省份数据源|
 
