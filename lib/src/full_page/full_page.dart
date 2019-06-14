@@ -30,9 +30,9 @@ class FullPage extends StatefulWidget {
     'code': 0,
     'name': '定位中...'
   };
-
+  final bool showPosition;
   FullPage(
-      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm, this.showCountry, this.positionInfo});
+      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm, this.showCountry, this.positionInfo, this.showPosition});
 
   @override
   _FullPageState createState() => _FullPageState();
@@ -438,7 +438,37 @@ class _FullPageState extends State<FullPage> {
       itemList1[0].code = int.parse(widget.positionInfo['code'].toString());
       itemList1[0].name = widget.positionInfo['name'];
     }
+    var areasHeight = Adapt.screenH() - 80;
+    List<Widget> listWidgets = [];
+    if (widget.showPosition == true) {
+      listWidgets.add(SizedBox(
+          height: 60.0,
+          child: ListWidget(
+            itemList: itemList1,
+            onSelect: (point) {
+              print('选中的数据：${point.code}');
+              if (widget.changed != null) {
+                Result result = Result();
+                result.provinceId = point.code.toString();
+                result.provinceName = point.name;
+                widget.changed(result);
+              }
+              Navigator.of(context).pop();
+            },
+          )
+      ));
+      areasHeight = areasHeight - 70.0;
+    }
 
+    listWidgets.add(SizedBox(
+        height: areasHeight,
+        child: ListWidget(
+          itemList: itemList,
+          controller: scrollController,
+          onSelect: _onItemSelect,
+          selectedId: _getSelectedId(),
+        )
+    ));
     return WillPopScope(
       onWillPop: back,
       child: Scaffold(
@@ -447,33 +477,7 @@ class _FullPageState extends State<FullPage> {
           body: SafeArea(
               bottom: true,
               child: Column(
-                children: <Widget>[
-                  SizedBox(
-                      height: 60.0,
-                      child: ListWidget(
-                        itemList: itemList1,
-                        onSelect: (point) {
-                          print('选中的数据：${point.code}');
-                          if (widget.changed != null) {
-                            Result result = Result();
-                            result.provinceId = point.code.toString();
-                            result.provinceName = point.name;
-                            widget.changed(result);
-                          }
-                          Navigator.of(context).pop();
-                        },
-                      )
-                  ),
-                  SizedBox(
-                      height: Adapt.screenH() - 150.0,
-                      child: ListWidget(
-                        itemList: itemList,
-                        controller: scrollController,
-                        onSelect: _onItemSelect,
-                        selectedId: _getSelectedId(),
-                      )
-                  ),
-                ],
+                children: listWidgets
               )
       ))
     );

@@ -176,6 +176,7 @@ class _ShowFullPageCityPickerState extends State<ShowFullPageCityPicker> {
                   'code': 123,
                   'name': '定位数据'
                 },
+                showPosition: true,
                 changed: (value) {
                   print('选择的结果');
                   print(value);
