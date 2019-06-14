@@ -172,6 +172,10 @@ class _ShowFullPageCityPickerState extends State<ShowFullPageCityPicker> {
                 provincesData: customerMeta ? provincesData : null,
                 showConfirm: true,
                 showCountry: true,
+                positionInfo: {
+                  'code': 123,
+                  'name': '定位数据'
+                },
                 changed: (value) {
                   print('选择的结果');
                   print(value);

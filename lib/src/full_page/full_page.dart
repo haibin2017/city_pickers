@@ -25,9 +25,14 @@ class FullPage extends StatefulWidget {
   final ValueChanged<Result> changed;
   final bool showConfirm;
   final bool showCountry;
+  // 定位数据
+  Map<String, dynamic> positionInfo = {
+    'code': 0,
+    'name': '定位中...'
+  };
 
   FullPage(
-      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm, this.showCountry});
+      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm, this.showCountry, this.positionInfo});
 
   @override
   _FullPageState createState() => _FullPageState();
@@ -426,6 +431,14 @@ class _FullPageState extends State<FullPage> {
         title: _buildHead()
       );
     }
+    List<Point> itemList1 = [
+      Point(code: 0, child: [], depth: 0, letter: 'a', name: '定位中...')
+    ];
+    if (widget.positionInfo != null) {
+      itemList1[0].code = int.parse(widget.positionInfo['code'].toString());
+      itemList1[0].name = widget.positionInfo['name'];
+    }
+
     return WillPopScope(
       onWillPop: back,
       child: Scaffold(
@@ -433,12 +446,36 @@ class _FullPageState extends State<FullPage> {
           appBar: appBar,
           body: SafeArea(
               bottom: true,
-              child: ListWidget(
-                itemList: itemList,
-                controller: scrollController,
-                onSelect: _onItemSelect,
-                selectedId: _getSelectedId(),
-              ))),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                      height: 60.0,
+                      child: ListWidget(
+                        itemList: itemList1,
+                        onSelect: (point) {
+                          print('选中的数据：${point.code}');
+                          if (widget.changed != null) {
+                            Result result = Result();
+                            result.provinceId = point.code.toString();
+                            result.provinceName = point.name;
+                            widget.changed(result);
+                          }
+                          Navigator.of(context).pop();
+                        },
+                      )
+                  ),
+                  SizedBox(
+                      height: Adapt.screenH() - 150.0,
+                      child: ListWidget(
+                        itemList: itemList,
+                        controller: scrollController,
+                        onSelect: _onItemSelect,
+                        selectedId: _getSelectedId(),
+                      )
+                  ),
+                ],
+              )
+      ))
     );
   }
 }
