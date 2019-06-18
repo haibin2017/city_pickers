@@ -177,6 +177,17 @@ class _ShowFullPageCityPickerState extends State<ShowFullPageCityPicker> {
                   'name': '定位数据'
                 },
                 showPosition: true,
+                showHotCities: true,
+                hotCities: [
+                  {
+                    'code': 1,
+                    'name': '全国'
+                  },
+                  {
+                    'code': 10,
+                    'name': '北京'
+                  }
+                ],
                 changed: (value) {
                   print('选择的结果');
                   print(value);

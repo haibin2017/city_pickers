@@ -78,6 +78,8 @@ class CityPickers {
     bool showCountry,
     Map<String, dynamic> positionInfo,
     bool showPosition,
+    bool showHotCities,
+    var hotCities,
   }) {
     return Navigator.push(
         context,
@@ -95,6 +97,8 @@ class CityPickers {
                 showCountry: showCountry,
                 positionInfo: positionInfo,
                 showPosition: showPosition,
+                showHotCities: showHotCities,
+                hotCities: hotCities,
                 changed: (value) {
                   changed(value);
                 },

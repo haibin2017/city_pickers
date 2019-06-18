@@ -30,8 +30,11 @@ class FullPage extends StatefulWidget {
     'name': '定位中...'
   };
   final bool showPosition;
+  final bool showHotCities;
+  // 热门城市
+  var hotCities = [];
   FullPage(
-      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm, this.showCountry, this.positionInfo, this.showPosition});
+      {this.locationCode, this.showType, this.provincesData, this.citiesData, this.changed, this.showConfirm, this.showCountry, this.positionInfo, this.showPosition, this.showHotCities, this.hotCities});
 
   @override
   _FullPageState createState() => _FullPageState();
@@ -412,7 +415,7 @@ class _FullPageState extends State<FullPage> {
         actions: <Widget>[
           GestureDetector(
               child: Container(
-                padding: EdgeInsets.only(right: Adapt.px(40)),
+                padding: EdgeInsets.all(Adapt.px(40)),
                 alignment: Alignment.center,
                 child: Text('确定'),
               ),
@@ -439,25 +442,102 @@ class _FullPageState extends State<FullPage> {
     }
     var areasHeight = Adapt.screenH() - 80;
     List<Widget> listWidgets = [];
+    List<Widget> hostCityWidgets = [];
     if (widget.showPosition == true) {
-      listWidgets.add(
-          SizedBox(
-          height: 60.0,
-          child: ListWidget(
-            itemList: itemList1,
-            onSelect: (point) {
-              print('选中的数据：${point.code}');
-              if (widget.changed != null) {
-                Result result = Result();
-                result.provinceId = point.code.toString();
-                result.provinceName = point.name;
-                widget.changed(result);
-              }
-              Navigator.of(context).pop();
-            },
-          )
+      hostCityWidgets.add(
+        Container(
+        color: Color(0xffF5F4F9),
+        padding: EdgeInsets.fromLTRB(Adapt.px(40),Adapt.px(0),Adapt.px(40),Adapt.px(30)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(Adapt.px(0),Adapt.px(30),Adapt.px(0),Adapt.px(20)),
+              alignment: Alignment.centerLeft,
+              child: Text('你所在的城市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+            ),
+            GestureDetector(
+              onTap: () {
+                // 选择定位城市
+                if (widget.changed != null) {
+                  Result result = Result();
+                  result.provinceId = widget.positionInfo['code'].toString();
+                  result.provinceName = widget.positionInfo['name'];
+                  widget.changed(result);
+                }
+                Navigator.of(context).pop();
+              },
+              child:
+                Container(
+                  width: Adapt.px(200),
+                  height: Adapt.px(70),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                  ),
+                  child: Text((itemList1 != null && itemList1.isNotEmpty) ? itemList1[0].name : '', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                )
+            )
+          ],
+        ),
       ));
-      areasHeight = areasHeight - 70.0;
+    }
+    List<Widget> hotCityList = [];
+    if (widget.showHotCities == true) {
+      var hotCities = widget.hotCities;
+      if (hotCities != null && hotCities.isNotEmpty) {
+        for (var hotCity in hotCities) {
+          hotCityList.add(
+              GestureDetector(
+                  onTap: () {
+                    // 选择定位城市
+                    if (widget.changed != null) {
+                      Result result = Result();
+                      result.provinceId = hotCity['code'].toString();
+                      result.provinceName = hotCity['name'];
+                      widget.changed(result);
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  child:
+                    Container(
+                    width: Adapt.px(200),
+                    height: Adapt.px(70),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                    ),
+                    child: Text(hotCity['name'], style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                )
+              )
+          );
+        }
+      }
+
+      hostCityWidgets.add(
+        Container(
+            color: Color(0xffF5F4F9),
+            padding: EdgeInsets.fromLTRB(Adapt.px(40),Adapt.px(0),Adapt.px(40),Adapt.px(30)),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                Container(
+                  padding: EdgeInsets.fromLTRB(Adapt.px(0),Adapt.px(30),Adapt.px(0),Adapt.px(20)),
+                  alignment: Alignment.centerLeft,
+                  child: Text('热门城市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                ),
+                Wrap(
+                spacing: Adapt.px(30),
+                runSpacing: Adapt.px(30),
+                children: hotCityList
+                )
+            ])
+         )
+      );
     }
 
     listWidgets.add(SizedBox(
@@ -469,6 +549,8 @@ class _FullPageState extends State<FullPage> {
           selectedId: _getSelectedId(),
         )
     ));
+    hostCityWidgets.add(Column(
+        children: listWidgets));
     return WillPopScope(
       onWillPop: back,
       child: Scaffold(
@@ -478,114 +560,7 @@ class _FullPageState extends State<FullPage> {
             child: SafeArea(
                 bottom: true,
                 child: Column(
-                  children: <Widget>[
-                    /// 定位所在城市
-                    Container(
-                      color: Color(0xffF5F4F9),
-                      padding: EdgeInsets.fromLTRB(Adapt.px(40),Adapt.px(0),Adapt.px(40),Adapt.px(30)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.fromLTRB(Adapt.px(0),Adapt.px(30),Adapt.px(0),Adapt.px(20)),
-                            alignment: Alignment.centerLeft,
-                            child: Text('你所在的城市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                          ),
-                          Container(
-                            width: Adapt.px(200),
-                            height: Adapt.px(70),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
-                            ),
-                            child: Text('重庆市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                          )
-                        ],
-                      ),
-                    ),
-                    /// 热门城市
-                    Container(
-                      color: Color(0xffF5F4F9),
-                      padding: EdgeInsets.fromLTRB(Adapt.px(40),Adapt.px(0),Adapt.px(40),Adapt.px(30)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.fromLTRB(Adapt.px(0),Adapt.px(30),Adapt.px(0),Adapt.px(20)),
-                            alignment: Alignment.centerLeft,
-                            child: Text('热门城市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                          ),
-                          Wrap(
-                            spacing: Adapt.px(30),
-                            runSpacing: Adapt.px(30),
-                            children: <Widget>[
-                              Container(
-                                width: Adapt.px(200),
-                                height: Adapt.px(70),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
-                                ),
-                                child: Text('北京', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                              ),
-                              Container(
-                                width: Adapt.px(200),
-                                height: Adapt.px(70),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
-                                ),
-                                child: Text('重庆', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                              ),
-                              Container(
-                                width: Adapt.px(200),
-                                height: Adapt.px(70),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
-                                ),
-                                child: Text('广州', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                              ),
-                              Container(
-                                width: Adapt.px(200),
-                                height: Adapt.px(70),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
-                                ),
-                                child: Text('上海', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                              ),
-                              Container(
-                                width: Adapt.px(200),
-                                height: Adapt.px(70),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
-                                ),
-                                child: Text('杭州', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    /// 原有数据
-                    Column(
-                        children: listWidgets
-                    )
-                  ],
+                  children: hostCityWidgets,
                 )
             )
           )
