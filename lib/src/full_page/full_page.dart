@@ -415,7 +415,7 @@ class _FullPageState extends State<FullPage> {
         actions: <Widget>[
           GestureDetector(
               child: Container(
-                padding: EdgeInsets.all(Adapt.px(40)),
+                padding: EdgeInsets.only(right: Adapt.px(40)),
                 alignment: Alignment.center,
                 child: Text('确定'),
               ),
@@ -444,8 +444,7 @@ class _FullPageState extends State<FullPage> {
     List<Widget> listWidgets = [];
     List<Widget> hostCityWidgets = [];
     if (widget.showPosition == true) {
-      hostCityWidgets.add(
-        Container(
+      hostCityWidgets.add(Container(
         color: Color(0xffF5F4F9),
         padding: EdgeInsets.fromLTRB(Adapt.px(40),Adapt.px(0),Adapt.px(40),Adapt.px(30)),
         child: Column(
@@ -540,28 +539,25 @@ class _FullPageState extends State<FullPage> {
       );
     }
 
-    listWidgets.add(SizedBox(
-        height: areasHeight,
+    listWidgets.add(
+      Container(
         child: ListWidget(
           itemList: itemList,
           controller: scrollController,
           onSelect: _onItemSelect,
           selectedId: _getSelectedId(),
-        )
-    ));
-    hostCityWidgets.add(Column(
-        children: listWidgets));
+        ),
+      )
+    );
+    hostCityWidgets.add(Column(children: listWidgets));
     return WillPopScope(
       onWillPop: back,
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: appBar,
           body: SingleChildScrollView(
-            child: SafeArea(
-                bottom: true,
-                child: Column(
-                  children: hostCityWidgets,
-                )
+            child: Column(
+              children: hostCityWidgets,
             )
           )
       )
@@ -582,6 +578,7 @@ class ListWidget extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     return ListView.builder(
       controller: controller,
+      shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         Point item = itemList[index];
         return Container(
