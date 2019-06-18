@@ -6,7 +6,7 @@
 // email: sanfan.hx@alibaba-inc.com
 // tartget:  xxx
 //
-
+import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:city_pickers/modal/base_citys.dart';
@@ -15,7 +15,6 @@ import 'package:city_pickers/modal/result.dart';
 import 'package:city_pickers/src/show_types.dart';
 import 'package:city_pickers/src/util.dart';
 import 'package:city_pickers/src/utils/adaption_utils.dart';
-import 'package:flutter/material.dart';
 
 class FullPage extends StatefulWidget {
   final String locationCode;
@@ -441,7 +440,8 @@ class _FullPageState extends State<FullPage> {
     var areasHeight = Adapt.screenH() - 80;
     List<Widget> listWidgets = [];
     if (widget.showPosition == true) {
-      listWidgets.add(SizedBox(
+      listWidgets.add(
+          SizedBox(
           height: 60.0,
           child: ListWidget(
             itemList: itemList1,
@@ -474,12 +474,122 @@ class _FullPageState extends State<FullPage> {
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: appBar,
-          body: SafeArea(
-              bottom: true,
-              child: Column(
-                children: listWidgets
-              )
-      ))
+          body: SingleChildScrollView(
+            child: SafeArea(
+                bottom: true,
+                child: Column(
+                  children: <Widget>[
+                    /// 定位所在城市
+                    Container(
+                      color: Color(0xffF5F4F9),
+                      padding: EdgeInsets.fromLTRB(Adapt.px(40),Adapt.px(0),Adapt.px(40),Adapt.px(30)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(Adapt.px(0),Adapt.px(30),Adapt.px(0),Adapt.px(20)),
+                            alignment: Alignment.centerLeft,
+                            child: Text('你所在的城市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                          ),
+                          Container(
+                            width: Adapt.px(200),
+                            height: Adapt.px(70),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                            ),
+                            child: Text('重庆市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                          )
+                        ],
+                      ),
+                    ),
+                    /// 热门城市
+                    Container(
+                      color: Color(0xffF5F4F9),
+                      padding: EdgeInsets.fromLTRB(Adapt.px(40),Adapt.px(0),Adapt.px(40),Adapt.px(30)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.fromLTRB(Adapt.px(0),Adapt.px(30),Adapt.px(0),Adapt.px(20)),
+                            alignment: Alignment.centerLeft,
+                            child: Text('热门城市', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                          ),
+                          Wrap(
+                            spacing: Adapt.px(30),
+                            runSpacing: Adapt.px(30),
+                            children: <Widget>[
+                              Container(
+                                width: Adapt.px(200),
+                                height: Adapt.px(70),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                                ),
+                                child: Text('北京', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                              ),
+                              Container(
+                                width: Adapt.px(200),
+                                height: Adapt.px(70),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                                ),
+                                child: Text('重庆', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                              ),
+                              Container(
+                                width: Adapt.px(200),
+                                height: Adapt.px(70),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                                ),
+                                child: Text('广州', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                              ),
+                              Container(
+                                width: Adapt.px(200),
+                                height: Adapt.px(70),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                                ),
+                                child: Text('上海', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                              ),
+                              Container(
+                                width: Adapt.px(200),
+                                height: Adapt.px(70),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 1.0, color: Color(0xFFCDCDCD)),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(Adapt.px(4)))
+                                ),
+                                child: Text('杭州', style: TextStyle(color: Colors.black, fontSize: Adapt.px(24))),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    /// 原有数据
+                    Column(
+                        children: listWidgets
+                    )
+                  ],
+                )
+            )
+          )
+      )
     );
   }
 }
