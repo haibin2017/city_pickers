@@ -6,7 +6,7 @@ Language: [English](https://github.com/hanxu317317/city_pickers/blob/master/READ
 # Demo
 <image src="https://img.alicdn.com/tfs/TB16H9XGCzqK1RjSZPcXXbTepXa-329-687.gif" style="width: 300px" />
 <image src="https://img.alicdn.com/tfs/TB1CXEhLlLoK1RjSZFuXXXn0XXa-347-705.gif" style="width: 300px" />
-<image src="https://dev.tencent.com/s/edcb3d1d-27ff-41a9-b117-f1ae9c246872" style="width: 300px" />
+<image src="https://raw.githubusercontent.com/haibin2017/images/master/readme/full_city.jpg" style="width: 300px" />
 
 
 # 开始
